@@ -1,0 +1,6 @@
+/* Tipografía suave para contenido */
+.prose p { margin-top: 0.8rem; margin-bottom: 0.8rem; }
+.prose h1, .prose h2, .prose h3 { scroll-margin-top: 6rem; }
+.prose img { border-radius: 0.5rem; }
+.prose code { background: color-mix(in srgb, currentColor 8%, transparent); padding: 0.15rem 0.35rem; border-radius: 0.25rem; }
+.prose pre { border-radius: 0.5rem; overflow: auto; }
