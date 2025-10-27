@@ -1,18 +1,42 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { formatDateISO } from "@/lib/utils";
 import { getPostBySlug, getAllPosts } from "@/lib/mdx";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import remarkGfm from "remark-gfm";
-import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import YouTube from "@/components/mdx/YouTube";
-import Img from "@/components/mdx/Img";
-import Quote from "@/components/mdx/Quote";
 
 export async function generateStaticParams() {
   const posts = await getAllPosts();
   return posts.map((p) => ({ slug: p.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+  if (!post) return {};
+  const title = post.title;
+  const description = post.description ?? "Publicación del blog";
+  const base = new URL(process.env.SITE_URL || "https://example.com");
+  const ogUrl = new URL("/opengraph-image", base).toString();
+  const images = [{ url: ogUrl, width: 1200, height: 630, alt: title }];
+
+  return {
+    title,
+    description,
+    alternates: { canonical: new URL(`/blog/${slug}`, base).toString() },
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      url: new URL(`/blog/${slug}`, base).toString(),
+      images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images,
+    },
+  };
 }
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -40,19 +64,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         </div>
       </header>
       <hr className="my-8 border-neutral-200/60 dark:border-neutral-800" />
-      <div className="prose dark:prose-invert max-w-none">
-        {/* Renderizar MDX desde string con next-mdx-remote */}
-        <MDXRemote
-          source={post.content}
-          options={{
-            mdxOptions: {
-              remarkPlugins: [remarkGfm],
-              rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
-            },
-          }}
-          components={{ YouTube, Img, Quote }}
-        />
-      </div>
+      <div className="prose dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.content }} />
     </article>
   );
 }

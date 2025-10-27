@@ -6,6 +6,7 @@ export type PostMeta = {
   draft?: boolean;
   readingTimeMinutes: number;
   slug: string;
+  ogImage?: string;
 };
 
 export type Post = PostMeta & {

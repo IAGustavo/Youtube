@@ -1,0 +1,17 @@
+[
+  {
+    "src": "/gallery/foto1.svg",
+    "alt": "Desarrollo y código",
+    "caption": "Línea a línea, construyendo soluciones."
+  },
+  {
+    "src": "/gallery/foto2.svg",
+    "alt": "Laptop y entorno de trabajo",
+    "caption": "Donde nacen las ideas digitales."
+  },
+  {
+    "src": "/gallery/foto3.svg",
+    "alt": "Tecnología e innovación",
+    "caption": "El futuro está en nuestras manos."
+  }
+]
